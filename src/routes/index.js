@@ -1,9 +1,13 @@
 import express from 'express';
 
-import welcomeController from '../controllers/welcomeController';
+import meController from '../controllers/meController';
+import musicController from '../controllers/musicController';
 
 const indexRouter = express.Router();
 
-indexRouter.get('/', welcomeController.view);
+indexRouter.get('/', meController.hello);
+
+indexRouter.get('/music/currently-listening', musicController.currentlyListening);
+indexRouter.get('/music/recently-played', musicController.recentlyPlayed);
 
 export default indexRouter;
