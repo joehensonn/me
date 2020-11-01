@@ -8,6 +8,6 @@ const indexRouter = express.Router();
 indexRouter.get('/', meController.hello);
 
 indexRouter.get('/music/currently-listening', musicController.currentlyListening);
-indexRouter.get('/music/recently-played', musicController.topTracks);
+indexRouter.get('/music/top-songs', musicController.topSongs);
 
 export default indexRouter;

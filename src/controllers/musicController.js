@@ -29,7 +29,7 @@ const currentlyListening = (req, res) => {
     });
 };
 
-const topTracks = (req, res) => {
+const topSongs = (req, res) => {
     if (req.query.period) {
         if (!validPeriods.includes(req.query.period)) {
             respondToUser(res, 400, {message: `Invalid query parameters. ${req.query.period} isn't a valid period.`})
@@ -63,4 +63,4 @@ function respondToUser(res, status, data) {
     res.status(status).json(data);
 }
 
-export default { currentlyListening,  topTracks}
+export default { currentlyListening,  topSongs }
