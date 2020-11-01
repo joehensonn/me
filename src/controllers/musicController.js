@@ -6,6 +6,8 @@ import axios from "axios";
 
 import { lastFmUrl, lastFmUser, lastFmApiKey } from '../settings';
 
+const validPeriods = ['overall', '7day', '1month', '3month', '6month', '12month'];
+
 const currentlyListening = (req, res) => {
     axios.get(lastFmUrl, {
         params: {
@@ -15,23 +17,50 @@ const currentlyListening = (req, res) => {
             format: 'json'
         }
     }).then(function (response) {
-        if (response.status === 200) {
-            const details = response.data.recenttracks;
-            const song = response.data.recenttracks.track[0];
-            
-            const data = {
-                currently_listening: isset(details['@attr']['nowplaying'] ? 1 : 0),
-                artist: song['artist']['#text'],
-                album: song['album']['#text'],
-                title: song['name'],
-                artwork: song['image'][2]['#text']
-            }
-
-            console.log(data);
+        const data = {
+            details: response.data.recenttracks['@attr'],
+            song: response.data.recenttracks.track[0]
         }
+
+        respondToUser(res, response.status, data);
+
+    }).catch(function (error) {
+        respondToUser(res, error.response.status, {message: 'Oops, unknown error occured'})
     });
 };
 
-const recentlyPlayed = (req, res) => {};
+const topTracks = (req, res) => {
+    if (req.query.period) {
+        if (!validPeriods.includes(req.query.period)) {
+            respondToUser(res, 400, {message: `Invalid query parameters. ${req.query.period} isn't a valid period.`})
+        }
+    }
 
-export default { currentlyListening,  recentlyPlayed}
+    if (req.query.limit && isNaN(req.query.limit)) {
+        respondToUser(res, 400, {message: `Invalid query parameters. ${req.query.limit} isn't a valid limit.`})
+    }
+
+    axios.get(lastFmUrl, {
+        params: {
+            method: 'user.gettoptracks',
+            user: lastFmUser,
+            api_key: lastFmApiKey,
+            format: 'json',
+            period: req.query.period ?? 'overall',
+            limit: req.query.limit ?? 20
+        }
+    }).then(function (response) {
+        const tracks = response.data.toptracks.track;
+
+        respondToUser(res, response.status, tracks)
+
+    }).catch(function (error) {
+        respondToUser(res, error.response.status, {message: 'Oops, unknown error occured.'})
+    });
+};
+
+function respondToUser(res, status, data) {
+    res.status(status).json(data);
+}
+
+export default { currentlyListening,  topTracks}
