@@ -3,8 +3,9 @@
 */
 
 import axios from "axios";
+import SpotifyWebApi from 'spotify-web-api-node';
 
-import { lastFmUrl, lastFmUser, lastFmApiKey } from '../settings';
+import { lastFmUrl, lastFmUser, lastFmApiKey, spotifyClient, spotifyClientSecret } from '../settings';
 
 const validPeriods = ['overall', '7day', '1month', '3month', '6month', '12month'];
 
@@ -63,4 +64,19 @@ function respondToUser(res, status, data) {
     res.status(status).json(data);
 }
 
-export default { currentlyListening,  topSongs }
+async function spotifyConnect(req, res) {
+    const spotifyApi = new SpotifyWebApi({
+        clientId: spotifyClient,
+        clientSecret: spotifyClientSecret
+    });
+
+    const connection = await spotifyApi.clientCredentialsGrant();
+
+    spotifyApi.setAccessToken(connection.body['access_token']);
+
+    const data = await spotifyApi.getMyDevices();
+
+    respondToUser(res, 200, {data: data.body});
+}
+
+export default { currentlyListening,  topSongs, spotifyConnect }

@@ -13,4 +13,6 @@ indexRouter.get('/music/top-songs', musicController.topSongs);
 
 indexRouter.get('/home/outside', homeController.outside);
 
+indexRouter.get('/test', musicController.spotifyConnect);
+
 export default indexRouter;
