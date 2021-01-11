@@ -13,3 +13,6 @@ export const country = process.env.LOCATION_COUNTRY;
 
 export const weatherApiKey = process.env.OPENWEATHER_API_KEY;
 export const weatherApiCityId = process.env.OPENWEATHER_CITY_ID;
+
+export const spotifyClient = process.env.SPOTIFY_CLIENT;
+export const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
