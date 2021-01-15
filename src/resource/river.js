@@ -13,9 +13,9 @@ export async function riverDetails()
         const currentHeight = river.data.items.measures.latestReading.value;
         let severity = 1;
 
-        if (currentHeight > 2) {
+        if (currentHeight > 1.5) {
             severity = 3
-        } else if (currentHeight > 1.33 && currentHeight < 2) {
+        } else if (currentHeight > 1.2 && currentHeight < 1.5) {
             severity = 2;
         }
         
