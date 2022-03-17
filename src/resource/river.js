@@ -11,7 +11,7 @@ export async function riverDetails()
         const river = await axios.get(`https://environment.data.gov.uk/flood-monitoring/id/stations/${govRiverStation}`);
 
         const currentHeight = river.data.items.measures.latestReading.value;
-        let severity = lowRiverSeverity;
+        let severity = 1;
 
         if (currentHeight > highRiverSeverity) {
             severity = 3
